@@ -1,0 +1,25 @@
+CTW Lite
+Copyright (c) 2026 Awrawra
+
+This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License (CC BY-SA 4.0).
+
+Full legal code: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+-------------------------------------------------------------------------------
+Attribution
+-------------------------------------------------------------------------------
+
+This work is an adaptation of "Carry That Weight" by MrPMG
+https://www.nexusmods.com/skyrimspecialedition/mods/50144
+released by its author under CC BY-SA 4.0.
+
+Changes made to the original work:
+
+- New plugins that use the original plugin (CarryThatWeight_MrPMG.esp) as a
+  master and override some of its records.
+- New Papyrus scripts written for this project.
+- A recompiled copy of the original MCM script (__pmg_CapacityTools_MCM), with
+  an added handler that reads the current settings when the menu opens.
+
+The original work is available, free of charge, at the address above.

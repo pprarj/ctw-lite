@@ -1,0 +1,54 @@
+# CTW Lite (repositorio publico) - normalizacao de fim de linha
+#
+# Motivo: esta instancia tem core.autocrlf=true. Sem este arquivo, o que sai na
+# copia de trabalho depende da configuracao da maquina que clonar, e nao da
+# convencao do projeto. A regra entra ANTES do sintoma: o que produz o desvio e
+# o checkout em outra maquina, nao a edicao aqui. A convencao do projeto e: LF
+# no indice para todo texto, e CRLF na copia de trabalho so onde a ferramenta
+# exige.
+#
+# Este arquivo NAO renormaliza nada num repositorio cujo indice ja esteja em LF,
+# e por isso "git status" continua limpo depois de acrescenta-lo. O que ele fixa
+# e a copia de trabalho, aqui e em qualquer clone futuro.
+#
+# Atributo para extensao que o projeto ainda nao rastreia e INERTE - ele passa a
+# valer sozinho no dia em que o primeiro arquivo daquele tipo aparecer. Por isso
+# a lista ja vem inteira, e nao se poda o que o projeto "ainda nao usa".
+#
+# Nada aqui atravessa para dentro dos submodulos: .gitattributes de superprojeto
+# nao vale dentro de submodulo.
+
+# Texto em LF - documento, fonte C++, script, configuracao
+*.md              text eol=lf
+LICENSE           text eol=lf
+*.txt             text eol=lf
+*.json            text eol=lf
+*.py              text eol=lf
+*.toml            text eol=lf
+*.ps1             text eol=lf
+*.h               text eol=lf
+*.cpp             text eol=lf
+*.in              text eol=lf
+.gitignore        text eol=lf
+.gitattributes    text eol=lf
+.gitmodules       text eol=lf
+
+# Texto em CRLF - exigencia de ferramenta, nao preferencia. O compilador
+# Papyrus e o cmd.exe leem estes.
+*.psc             text eol=crlf
+*.bat             text eol=crlf
+
+# Binario - nunca converter, nunca tentar diff de texto
+*.esp             binary
+*.esm             binary
+*.esl             binary
+*.pex             binary
+*.seq             binary
+*.bsa             binary
+*.nif             binary
+*.dds             binary
+*.hkx             binary
+*.fuz             binary
+*.wav             binary
+*.png             binary
+*.jpg             binary

@@ -1,0 +1,17 @@
+# This repository holds SOURCE between releases. Compiled scripts and plugins are
+# committed ONLY by the release step, which copies them from the author's build and
+# checks them by hash - with `git add -f`, because they are ignored here on purpose.
+# Ignoring them makes the mistake safe: a stray build output is never committed by
+# accident, and a release that forgets a file shows up as a missing file.
+*.pex
+*.esp
+*.esl
+*.esm
+*.bsa
+
+# Editor and tool leftovers
+*.bak
+*.bak[0-9]*
+*.pex.tmp
+.vs/
+*.user
