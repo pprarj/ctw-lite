@@ -7,8 +7,11 @@ Two companion plugins for **Carry That Weight** by MrPMG
   capacity per level and capacity per point of stamina - and replaces the original's menu
   with a single page. The item limiter and the encumbrance buffs and debuffs are gone, and
   so is the inventory event scripting they need.
-- **Carry That Weight Settings Loader** saves your Carry That Weight settings to a file and
-  loads them into a new game. It works with the original mod and with Lite.
+- **Carry That Weight - Persistent Settings** keeps your Carry That Weight settings in a
+  file outside your save, so a new character starts with the settings you already chose.
+  It has no menu of its own: it writes the file when you change something in Carry That
+  Weight's own menu, and applies it the first time a save runs. It works with the
+  original mod and with Lite.
 
 Both plugins **require the original mod installed** - they use its plugin as a master.
 

@@ -1,9 +1,13 @@
 scriptname __pmg_CapacityTools_MCM extends SKI_ConfigBase
 
 ; Modified copy of __pmg_CapacityTools_MCM.psc from Carry That Weight by MrPMG,
-; used under CC BY-SA 4.0 by the Carry That Weight Settings Loader. The only change
-; is the OnConfigOpen event after OnVersionUpdate, which refreshes the values this
-; menu shows from the globals before it draws.
+; used under CC BY-SA 4.0 by Carry That Weight - Persistent Settings. Two changes,
+; both marked below:
+;
+;   1. the RefreshFromGlobals function, called at the top of OnPageReset, which
+;      brings the values this menu shows up to date with the globals;
+;   2. the format string on the coin purse penalty slider, which the original
+;      leaves out on the line that draws the page.
 
 Actor property PlayerRef auto
 
@@ -136,11 +140,18 @@ event OnVersionUpdate(Int aiNewVersion)
    Debug.Notification("Done Updating Carry That Weight.")
 endEvent
 
-; Carry That Weight Settings Loader: the menu shows private copies of the globals,
+; Change 1 - Persistent Settings: the menu shows private copies of the globals,
 ; so copy the globals in first and show what another script wrote to them.
 ; __pmg_Capacity_UpdateInterval is left out on purpose: the original plugin does not
 ; bind that property, so it is None at runtime and reading it would log an error.
-event OnConfigOpen()
+;
+; This is called from the top of OnPageReset, and deliberately NOT from an
+; OnConfigOpen of its own. Reading 29 globals takes long enough that a separate
+; event races the page build: on a new game the menu drew the plugin's defaults
+; while the HUD already showed the applied values. Called from inside the event
+; that draws the page, the copies cannot be stale and nothing needs redrawing.
+; Measured 2026-09-20.
+Function RefreshFromGlobals()
 	MCM_TargetCapacityBase = __pmg_TargetCapacityBase.GetValue() as int
 	MCM_TargetCapacityPerLevel = __pmg_TargetCapacityPerLevel.GetValue() as int
 	MCM_TargetCapacityPerStamina = __pmg_TargetCapacityPerStamina.GetValue()
@@ -175,7 +186,7 @@ event OnConfigOpen()
 	StealthS2 = __pmg_Stealth_S2.GetValue() as int
 
 	PesterInterval = __pmg_Capacity_PesterInterval.GetValue() as int
-endEvent
+EndFunction
 
 event OnConfigClose()
 	if (ModEnabled)
@@ -198,6 +209,10 @@ event OnConfigClose()
 endEvent
 
 Function OnPageReset(String page)
+	; Change 1 - Persistent Settings: this page draws from private copies, so bring
+	; them up to date with the globals before a single option is added.
+	RefreshFromGlobals()
+
 	if (page == "Limiter Settings")
 		if (ModEnabled)
 			AddHeaderOption("Limiter Amounts")
@@ -219,7 +234,11 @@ Function OnPageReset(String page)
 			AddSliderOptionST("Penalty4Slider", "Penalty", Penalty4)
 
             AddSliderOptionST("Amount5Slider", "Coin Purse Capacity (money)", Amount5)
-            AddSliderOptionST("Penalty5Slider", "Penalty", Penalty5)
+            ; Change 2 - the original omits the format here, so this float draws
+            ; with no decimal: the 0.2 default showed as "0". OnSliderAcceptST
+            ; below already passes "{1}", which is why the same row changed shape
+            ; after being moved.
+            AddSliderOptionST("Penalty5Slider", "Penalty", Penalty5,"{1}")
 		else
 			AddToggleOptionST("ModToggle","Enable Mod", ModEnabled)
 			AddEmptyOption()

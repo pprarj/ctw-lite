@@ -1,10 +1,12 @@
 Scriptname CTWLite_Manager extends Quest
 {CTW Lite - carry weight manager. Recalculates CarryWeight from the three capacity
 globals of Carry That Weight, removes the spells the original left on the player,
-and keeps the updater effect on the player running this mod's effect script.}
+and keeps the updater effect on the player running this mod's effect script.
+The MCM can turn the mod off, which stops recalculating and restores capacity 300.}
 
 ; Formula and floor adapted from Carry That Weight by MrPMG (CC BY-SA 4.0),
 ; __pmg_CapacityTools_Manager.psc lines 201-202 and 246-248, without the limiter.
+; Capacity 300 when turned off: same file, ResetVanillaCapacity, lines 308-311.
 
 Actor Property PlayerRef Auto
 GlobalVariable Property TargetCapacityBase Auto
@@ -19,6 +21,10 @@ Spell[] Property LeftoverSpells Auto
 ; original already has the spell, applied while its effect ran the original script.
 bool updaterRefreshed = false
 
+; Set by the MCM toggle. Named for the off state so that the zero value, which a
+; save made before the toggle existed also reads, means enabled.
+bool modDisabled = false
+
 Event OnInit()
 	RunMaintenance()
 EndEvent
@@ -27,11 +33,41 @@ EndEvent
 ; every save load. Every step is safe to repeat.
 Function RunMaintenance()
 	RemoveLeftoverSpells()
+	If modDisabled
+		Return
+	EndIf
+	EnsureUpdaterEffect()
+	Recalculate()
+EndFunction
+
+bool Function IsEnabled()
+	Return !modDisabled
+EndFunction
+
+; Called by the MCM toggle. Nothing changes on the player until ApplyState.
+Function SetEnabled(bool enabled)
+	modDisabled = !enabled
+EndFunction
+
+; Called when the MCM closes.
+Function ApplyState()
+	If modDisabled
+		; Only on the close that turns the mod off, not on every later close.
+		If PlayerRef.HasSpell(CapacityUpdaterSpell)
+			PlayerRef.RemoveSpell(CapacityUpdaterSpell)
+			PlayerRef.SetActorValue("CarryWeight", 300)
+			Debug.Trace("[CTWLite] turned off, carryWeight=300")
+		EndIf
+		Return
+	EndIf
 	EnsureUpdaterEffect()
 	Recalculate()
 EndFunction
 
 Function Recalculate()
+	If modDisabled
+		Return
+	EndIf
 	float capacityBase = TargetCapacityBase.GetValue()
 	float perLevel = TargetCapacityPerLevel.GetValue()
 	float perStamina = TargetCapacityPerStamina.GetValue()

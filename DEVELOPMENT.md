@@ -11,8 +11,8 @@ everything these scripts extend or call, and none of them are redistributable he
 | `<this repo>\Scripts\Source` | this project's scripts |
 | `<Skyrim>\Data\Scripts\Source` or `<Skyrim>\Data\Source\Scripts` | vanilla and SKSE script sources |
 | SkyUI SDK `Scripts\Source` | `SKI_ConfigBase`, the MCM base class |
-| PapyrusUtil `Scripts\Source` | `JsonUtil`, used by the Settings Loader |
-| Carry That Weight `Source\Scripts` | the original's scripts, which the Settings Loader recompiles with one change |
+| PapyrusUtil `Scripts\Source` | `JsonUtil`, used by Persistent Settings |
+| Carry That Weight `Source\Scripts` | the original's scripts, one of which Persistent Settings recompiles with two changes |
 
 ```
 PapyrusCompiler.exe <script or folder> ^

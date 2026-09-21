@@ -1,9 +1,11 @@
 Scriptname CTWLite_MCM extends SKI_ConfigBase
-{CTW Lite - one MCM page with the three capacity sliders. The sliders read and write
-the globals directly, with no private copy. ModName and Pages are set in the plugin.}
+{CTW Lite - one MCM page with the Enable Mod toggle and the three capacity sliders.
+The sliders read and write the globals directly, with no private copy. The toggle
+state lives in the manager. ModName and Pages are set in the plugin.}
 
 ; Slider ranges, steps, defaults, format and help texts adapted from Carry That
 ; Weight by MrPMG (CC BY-SA 4.0), __pmg_CapacityTools_MCM.psc lines 226-322.
+; The Enable Mod toggle is applied on close, as in that file's OnConfigClose.
 
 CTWLite_Manager Property Manager Auto
 GlobalVariable Property TargetCapacityBase Auto
@@ -17,10 +19,12 @@ Event OnGameReload()
 EndEvent
 
 Event OnConfigClose()
-	Manager.Recalculate()
+	Manager.ApplyState()
 EndEvent
 
 Event OnPageReset(string a_page)
+	AddToggleOptionST("EnableToggle", "Enable Mod", Manager.IsEnabled())
+	AddEmptyOption()
 	AddSliderOptionST("BaseSlider", "Base Capacity", TargetCapacityBase.GetValue())
 	AddEmptyOption()
 	AddSliderOptionST("PerLevelSlider", "Per Level Capacity", TargetCapacityPerLevel.GetValue())
@@ -28,6 +32,22 @@ Event OnPageReset(string a_page)
 	AddSliderOptionST("PerStaminaSlider", "Per Stamina Capacity", TargetCapacityPerStamina.GetValue(), "{2}")
 	AddEmptyOption()
 EndEvent
+
+State EnableToggle
+	Event OnSelectST()
+		Manager.SetEnabled(!Manager.IsEnabled())
+		SetToggleOptionValueST(Manager.IsEnabled())
+	EndEvent
+
+	Event OnDefaultST()
+		Manager.SetEnabled(true)
+		SetToggleOptionValueST(Manager.IsEnabled())
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("Turn off before uninstalling. Applied when the menu closes: stops recalculating and sets carrying capacity back to 300")
+	EndEvent
+EndState
 
 State BaseSlider
 	Event OnSliderOpenST()

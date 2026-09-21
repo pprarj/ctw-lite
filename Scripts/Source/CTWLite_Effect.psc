@@ -8,7 +8,7 @@ CTWLite_Manager Property Manager Auto
 string Property STATS_MENU = "StatsMenu" AutoReadOnly
 string Property LEVELUP_MENU = "LevelUp Menu" AutoReadOnly
 
-; The Settings Loader re-adds the updater spell to apply settings, and relies on
+; Persistent Settings re-adds the updater spell to apply settings, and relies on
 ; this event recalculating.
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	RegisterMenus()
