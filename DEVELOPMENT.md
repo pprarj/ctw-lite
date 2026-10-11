@@ -32,9 +32,9 @@ The `.esp` files are produced by a generator that is not part of this repository
 release commits the exact plugins that go into the release archive, so what you see here is
 what players run. To study or change a record, open the plugin in xEdit.
 
-## What the author's own tree does differently, and why you do not need it
+## What the original development tree does differently, and why you do not need it
 
-The author develops inside a Mod Organizer 2 instance, where this repository sits inside
+Development happens inside a Mod Organizer 2 instance, where this repository sits inside
 the mod folder and the compiler writes `.pex` up into it, so the game loads a build
 immediately. That arrangement is convenient and entirely optional: it is one way of
 pointing `-o=` and nothing in the source depends on it.
